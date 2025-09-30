@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "722102966731",
+    "project_id": "gestion-medicamentos-5c2af",
+    "storage_bucket": "gestion-medicamentos-5c2af.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722102966731:android:2cf519a5c3ff4189d1be4e",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "722102966731-qopkmgto15pqih345k2s7hn7ddlvj26g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCD-GJDfuSGj5nzzvWzbGFVqybt_qQwZws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "722102966731-qopkmgto15pqih345k2s7hn7ddlvj26g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
