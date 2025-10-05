@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'user_data.dart';
 import 'login.dart';
+import 'medicamentos_page.dart';
+import 'comentarios_page.dart';
+import 'historial_toma_page.dart';
+import 'recordatorios_page.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -94,9 +98,7 @@ class HomePage extends StatelessWidget {
                       if (value == "datos") {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (context) => const UserDataPage(),
-                          ),
+                          _crearRuta(const UserDataPage()),
                         );
                       } else if (value == "logout") {
                         _cerrarSesion(context);
@@ -137,14 +139,42 @@ class HomePage extends StatelessWidget {
                 mainAxisSpacing: 18,
                 padding: const EdgeInsets.all(24),
                 children: [
-                  _buildOption(Icons.medication, "Medicamentos", Colors.teal),
+                  _buildOption(
+                    Icons.medication,
+                    "Medicamentos",
+                    Colors.teal,
+                    () => Navigator.push(
+                      context,
+                      _crearRuta(const MedicamentosPage()),
+                    ),
+                  ),
                   _buildOption(
                     Icons.chat_bubble_outline,
                     "Comentarios",
                     Colors.indigo,
+                    () => Navigator.push(
+                      context,
+                      _crearRuta(const ComentariosPage()),
+                    ),
                   ),
-                  _buildOption(Icons.history, "Historial", Colors.purple),
-                  _buildOption(Icons.alarm, "Recordatorios", Colors.deepOrange),
+                  _buildOption(
+                    Icons.history,
+                    "Historial",
+                    Colors.purple,
+                    () => Navigator.push(
+                      context,
+                      _crearRuta(const HistorialTomaPage()),
+                    ),
+                  ),
+                  _buildOption(
+                    Icons.alarm,
+                    "Recordatorios",
+                    Colors.deepOrange,
+                    () => Navigator.push(
+                      context,
+                      _crearRuta(const RecordatoriosPage()),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -154,9 +184,15 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildOption(IconData icon, String text, Color color) {
+  // 📦 Tarjetas del menú principal
+  Widget _buildOption(
+    IconData icon,
+    String text,
+    Color color,
+    VoidCallback onTap,
+  ) {
     return InkWell(
-      onTap: () {},
+      onTap: onTap,
       borderRadius: BorderRadius.circular(20),
       child: Ink(
         decoration: BoxDecoration(
@@ -192,6 +228,23 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  // 🌀 Animación de transición personalizada
+  Route _crearRuta(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOut;
+        final tween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
+        return SlideTransition(position: animation.drive(tween), child: child);
+      },
     );
   }
 }
