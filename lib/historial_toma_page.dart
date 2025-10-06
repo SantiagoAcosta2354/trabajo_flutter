@@ -11,6 +11,7 @@ class Toma {
   DateTime fechaHora;
   bool tomado;
   String? notas;
+  final bool fromDoctor;
 
   Toma({
     required this.id,
@@ -18,11 +19,14 @@ class Toma {
     required this.fechaHora,
     this.tomado = false,
     this.notas,
+    this.fromDoctor = false,
   });
 }
 
 class HistorialTomaPage extends StatefulWidget {
-  const HistorialTomaPage({super.key});
+  final bool fromDoctor;
+
+  const HistorialTomaPage({super.key, this.fromDoctor = false});
 
   @override
   State<HistorialTomaPage> createState() => _HistorialTomaPageState();

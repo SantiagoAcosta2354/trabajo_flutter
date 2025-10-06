@@ -1,31 +1,59 @@
 import 'package:flutter/material.dart';
+import 'login.dart';
+import 'user_data.dart';
+import 'citas_programadas_page.dart';
+import 'comentarios_page.dart';
 
 class HomeDoctorPage extends StatelessWidget {
   const HomeDoctorPage({super.key});
 
+  void _cerrarSesion(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Cerrar Sesión"),
+        content: const Text("¿Deseas cerrar tu sesión actual?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Cancelar"),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => const LoginPage()),
+                (route) => false,
+              );
+            },
+            child: const Text("Cerrar Sesión"),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final pacientes = ["Paciente 1", "Paciente 2", "Paciente 3", "Paciente 4"];
-
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: const Color(0xFFF9F9F9),
       body: SafeArea(
         child: Column(
           children: [
-            // 🔸 Encabezado con gradiente
+            // 🔶 Barra superior
             Container(
-              width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFFFFA726), Color(0xFFFF7043)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                  colors: [Colors.orange, Color(0xFFFFA726)],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
                 ),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black26,
-                    blurRadius: 8,
+                    blurRadius: 5,
                     offset: Offset(0, 3),
                   ),
                 ],
@@ -41,122 +69,95 @@ class HomeDoctorPage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.account_circle,
-                      color: Colors.white,
-                      size: 40,
+                  PopupMenuButton<String>(
+                    icon: const CircleAvatar(
+                      radius: 22,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.person, color: Colors.orange),
                     ),
-                    onPressed: () {
-                      // Ir a perfil del doctor
+                    onSelected: (value) {
+                      if (value == "perfil") {
+                        Navigator.push(
+                          context,
+                          _crearRuta(const UserDataPage()),
+                        );
+                      } else if (value == "logout") {
+                        _cerrarSesion(context);
+                      }
                     },
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: "perfil",
+                        child: Text("Perfil del Médico"),
+                      ),
+                      const PopupMenuItem(
+                        value: "logout",
+                        child: Text("Cerrar Sesión"),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 20),
-
-            // 🧑‍⚕️ Info del doctor
-            Column(
-              children: [
-                CircleAvatar(
-                  radius: 45,
-                  backgroundImage: const AssetImage(
-                    "assets/doctor.png",
-                  ), // tu imagen local
-                  backgroundColor: Colors.grey[300],
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Dr. Juan Pérez",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-                const Text(
-                  "Médico General",
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
-
             const SizedBox(height: 25),
 
-            // 🧍‍♂️ Lista de pacientes
-            Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: pacientes.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  childAspectRatio: 0.9,
-                ),
-                itemBuilder: (context, index) {
-                  final paciente = pacientes[index];
-                  return InkWell(
-                    onTap: () {
-                      // Navegar a detalles del paciente
-                    },
-                    borderRadius: BorderRadius.circular(16),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            blurRadius: 6,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.person,
-                            size: 50,
-                            color: Colors.orange,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            paciente,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+            // 🩺 Encabezado
+            const Icon(
+              Icons.local_hospital,
+              size: 90,
+              color: Colors.deepOrange,
+            ),
+            const SizedBox(height: 10),
+            const Text(
+              "Dr. Santiago Acosta",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const Text(
+              "Médico General",
+              style: TextStyle(color: Colors.grey, fontSize: 16),
             ),
 
-            // 🔹 Botones inferiores
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+            const SizedBox(height: 30),
+
+            // 🔹 Menú principal del médico
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 18,
+                mainAxisSpacing: 18,
+                padding: const EdgeInsets.all(24),
                 children: [
-                  _buildActionButton(
-                    icon: Icons.info_outline,
-                    label: "Ver información",
-                    onPressed: () {
-                      // acción info
+                  _buildOption(Icons.people, "Pacientes", Colors.teal, () {
+                    Navigator.push(
+                      context,
+                      _crearRuta(const GestionPacientesPage()),
+                    );
+                  }),
+                  _buildOption(
+                    Icons.calendar_month,
+                    "Citas Programadas",
+                    Colors.purple,
+                    () {
+                      Navigator.push(
+                        context,
+                        _crearRuta(const CitasProgramadasPage()),
+                      );
                     },
                   ),
-                  _buildActionButton(
-                    icon: Icons.calendar_today,
-                    label: "Citas programadas",
-                    onPressed: () {
-                      // acción citas
-                    },
-                  ),
+                  _buildOption(Icons.chat, "Comentarios", Colors.indigo, () {
+                    Navigator.push(
+                      context,
+                      _crearRuta(const ComentariosPage()),
+                    );
+                  }),
+                  _buildOption(Icons.bar_chart, "Reportes", Colors.orange, () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Sección de reportes en desarrollo"),
+                      ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -166,22 +167,87 @@ class HomeDoctorPage extends StatelessWidget {
     );
   }
 
-  // 🔸 Botón de acción inferior
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      icon: Icon(icon, color: Colors.white),
-      label: Text(label),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.orange,
-        foregroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        elevation: 4,
+  // Tarjetas del menú
+  Widget _buildOption(
+    IconData icon,
+    String text,
+    Color color,
+    VoidCallback onTap,
+  ) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Ink(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [color.withOpacity(0.85), color.withOpacity(0.6)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(2, 4),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: Colors.white, size: 48),
+              const SizedBox(height: 10),
+              Text(
+                text,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Transición animada
+  Route _crearRuta(Widget page) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOut;
+        final tween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
+        return SlideTransition(position: animation.drive(tween), child: child);
+      },
+    );
+  }
+}
+
+// 📋 Página de gestión de pacientes (placeholder, se crea enseguida)
+class GestionPacientesPage extends StatelessWidget {
+  const GestionPacientesPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Gestión de Pacientes"),
+        backgroundColor: Colors.teal,
+      ),
+      body: const Center(
+        child: Text(
+          "Aquí irá la lista de pacientes asignados al médico.",
+          style: TextStyle(fontSize: 18),
+        ),
       ),
     );
   }
